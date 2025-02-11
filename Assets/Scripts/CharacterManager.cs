@@ -20,7 +20,8 @@ public class CharacterManager : NetworkBehaviour
 {
     const int MAX_LIFE = 100;
 
-    NetworkVariable<SyncableCustomData> m_SyncedCustomData = new NetworkVariable<SyncableCustomData>(writePerm: NetworkVariableWritePermission.Owner); //you can adjust who can write to it with parameters
+    NetworkVariable<SyncableCustomData> m_SyncedCustomData = new NetworkVariable<SyncableCustomData>(default,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     [SerializeField] Image m_HealthBarImage;
     [SerializeField] TMP_Text m_UsernameLabel;
@@ -50,9 +51,22 @@ public class CharacterManager : NetworkBehaviour
         }
     }
 
+
     void ApplyDamage(int damage)
     {
-        if(!IsOwner) return;
+        if(IsOwner && m_SyncedCustomData.Value.Health > 0)
+        {
+            int old = m_SyncedCustomData.Value.Health;
+            int salud = old - damage;
+            ApplyDamageRpc(salud);
+            
+        }        
+    }
+
+    [Rpc(SendTo.Server)]
+    void ApplyDamageRpc(int damage)
+    {
+        if(!IsServer) return;
         
         if (m_SyncedCustomData.Value.Health > 0)
         {

@@ -29,13 +29,15 @@ public class PlayerMovement : NetworkBehaviour
         moveInput.x = Input.GetAxis("Horizontal") * speed;  // desplazamiento lateral (eje X)
         moveInput.y = Input.GetAxis("Vertical") * speed;    // desplazamiento frontal (eje Z)
         moveInput *= Time.deltaTime;                        // ajustar la velocidad al frame rate
+
+
         transform.Translate(moveInput.x, 0, moveInput.y);   // aplicar el desplazamiento
+        TranslateRpc(moveInput);
 
         // salto del jugador
         if (IsGrounded() && Input.GetButtonDown("Jump"))
         {
-            // aplicar una fuerza hacia arriba
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            JumpRpc();        
         }     
 
         // liberar el cursor al presionar la tecla ESC
@@ -43,6 +45,18 @@ public class PlayerMovement : NetworkBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    void TranslateRpc(Vector2 moveInput)
+    {
+        transform.Translate(moveInput.x, 0, moveInput.y);
+    }
+
+    [Rpc(SendTo.Server)]
+    void JumpRpc()
+    {
+         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     bool IsGrounded()
