@@ -1,24 +1,27 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
-public class PlayerDamage : MonoBehaviour
+public class PlayerDamage : NetworkBehaviour
 {
     const int MAX_LIFE = 100;
     [SerializeField] Text txtHealth;
     
-    int health = MAX_LIFE;
+    public NetworkVariable<int> health = new NetworkVariable<int>(MAX_LIFE);
     
-    void OnNetworkSpawn()
+    public override void OnNetworkSpawn()
     {
         ApplyDamage(0);
     }
 
     void ApplyDamage(int damage)
     {
-        if (health > 0)
+        if(!IsOwner) return;
+
+        if (health.Value > 0)
         {
-            health -= damage;
+            health.Value -= damage;
             txtHealth.text = health.ToString();
         }        
     }

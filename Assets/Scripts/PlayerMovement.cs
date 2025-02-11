@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     [Header("References")]
 
@@ -11,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     CapsuleCollider col;
 
-    void Start()
+    public override void  OnNetworkSpawn()
     {
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -20,7 +21,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update()
-    {
+    {  
+        if(!IsOwner) return;
+
         // desplazamiento del jugador
         Vector2 moveInput = Vector2.zero;
         moveInput.x = Input.GetAxis("Horizontal") * speed;  // desplazamiento lateral (eje X)

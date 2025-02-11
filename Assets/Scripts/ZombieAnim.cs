@@ -6,7 +6,7 @@ public class ZombieAnim : MonoBehaviour
     [SerializeField] Animator anim;
     NavMeshAgent agent;
 
-    void Start()
+    void OnNetworkSpawn()
     {
         anim.SetBool("IsRunning", true);
         agent = GetComponent<NavMeshAgent>();

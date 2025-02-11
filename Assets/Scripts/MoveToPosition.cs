@@ -7,7 +7,7 @@ public class MoveToPosition : MonoBehaviour
 
     NavMeshAgent agent;
     
-    void Start()
+    void OnNetworkSpawn()
     {
         // referencia al jugador
 //        target = GameObject.FindGameObjectWithTag("Player").transform;
