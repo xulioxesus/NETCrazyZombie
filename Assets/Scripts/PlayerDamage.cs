@@ -9,7 +9,7 @@ public class PlayerDamage : MonoBehaviour
     
     int health = MAX_LIFE;
     
-    void Start()
+    void OnNetworkSpawn()
     {
         ApplyDamage(0);
     }

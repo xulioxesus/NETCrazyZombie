@@ -10,16 +10,16 @@ public class MoveToPosition : MonoBehaviour
     void Start()
     {
         // referencia al jugador
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+//        target = GameObject.FindGameObjectWithTag("Player").transform;
 
         agent = GetComponent<NavMeshAgent>();
     }
     
     void Update()
     {
-        if (!agent.isStopped)
+        /*if (!agent.isStopped && target != null)
         {
             agent.SetDestination(target.position);
-        }
+        }*/
     }
 }
