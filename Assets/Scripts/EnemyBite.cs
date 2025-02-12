@@ -1,13 +1,16 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class EnemyBite : MonoBehaviour
+public class EnemyBite : NetworkBehaviour
 {
     
     void OnCollisionStay(Collision other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.SendMessage("ApplyDamage", 1);
+            if(IsServer){
+                other.gameObject.SendMessage("ApplyDamage", 1);
+            }
         }
     }
     

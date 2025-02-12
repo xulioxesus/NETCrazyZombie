@@ -1,19 +1,23 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class EnemyDamage : MonoBehaviour
+public class EnemyDamage : NetworkBehaviour
 {
     const int HITS_TO_DIE = 3;
     int hitCount;
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Bullet"))
-        {
-            hitCount++;
-
-            if (hitCount == HITS_TO_DIE)
+        if(IsServer){
+            if (collision.gameObject.CompareTag("Bullet"))
             {
-                Destroy(gameObject);
+                hitCount++;
+
+                if (hitCount == HITS_TO_DIE)
+                {
+                    GetComponent<NetworkObject>().Despawn();
+                    Destroy(gameObject);
+                }
             }
         }
     }

@@ -1,7 +1,7 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PowerUpApply : MonoBehaviour
+public class PowerUpApply : NetworkBehaviour
 {
     const int POWER = 50;
 
@@ -9,13 +9,16 @@ public class PowerUpApply : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            other.gameObject.SendMessage("ApplyDamage", -POWER);
+        if(IsServer){
+            if (other.CompareTag("Player"))
+            {
+                other.gameObject.SendMessage("ApplyDamage", -POWER);
 
-            AudioSource.PlayClipAtPoint(clip, transform.position);
-            
-            Destroy(gameObject);
+                AudioSource.PlayClipAtPoint(clip, transform.position);
+                
+                GetComponent<NetworkObject>().Despawn();
+                Destroy(gameObject);
+            }
         }
     }
 }

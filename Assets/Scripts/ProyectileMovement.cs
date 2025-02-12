@@ -1,11 +1,25 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class ProyectileMovement : MonoBehaviour
+public class ProyectileMovement : NetworkBehaviour
 {
-    const float SPEED = 10.0f;
+    public float speed = 10.0f;
+    public  float lifeTime = 5f;
     
-    void Update()
+    private void Start()
     {
-        transform.Translate(Vector3.forward * SPEED * Time.deltaTime);        
+        if (IsServer) // Solo el servidor controla la destrucción
+            Invoke(nameof(DestroyBullet), lifeTime);
+    }
+
+    private void Update()
+    {
+        transform.position += transform.forward * speed * Time.deltaTime;
+    }
+
+    private void DestroyBullet()
+    {
+        GetComponent<NetworkObject>().Despawn(); // Despawner en la red
+        Destroy(gameObject);
     }
 }

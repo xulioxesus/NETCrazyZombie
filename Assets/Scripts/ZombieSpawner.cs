@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using Unity.Netcode;
 
-public class ZombieSpawner : MonoBehaviour
+public class ZombieSpawner : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] GameObject zombie;
@@ -12,23 +13,23 @@ public class ZombieSpawner : MonoBehaviour
 
     int numZombies = 0;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        StartCoroutine(SpawnZombie());
+        if(IsServer){
+            InvokeRepeating(nameof(SpawnZombieRpc), 2f, spawnDelay);
+        }
     }
     
-    IEnumerator SpawnZombie()
+    [Rpc(SendTo.Server)]
+    private void SpawnZombieRpc()
     {
-        // Retardo inicial
-        yield return new WaitForSeconds(spawnDelay * 2);
+        if (!IsServer) return;
         
         while (numZombies < zombieMax)
         {
-            Instantiate(zombie, transform.position, Quaternion.identity);
-
-            numZombies++;
-            
-            yield return new WaitForSeconds(spawnDelay);
+            GameObject enemy = Instantiate(zombie, transform.position, Quaternion.identity);
+            enemy.GetComponent<NetworkObject>().Spawn();
+            numZombies++;   
         }
     }
 }

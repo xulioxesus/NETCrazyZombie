@@ -264,10 +264,11 @@ GameObject:
   - component: {fileID: 2073156678160619462}
   - component: {fileID: 5429871963330155458}
   - component: {fileID: 1801077324251873974}
-  - component: {fileID: 3527079749078452743}
   - component: {fileID: 6875368188381745497}
   - component: {fileID: 970209495802398846}
   - component: {fileID: 343854011653321674}
+  - component: {fileID: 3688563001721012450}
+  - component: {fileID: 3203739892898058822}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -386,19 +387,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &3527079749078452743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7889315627308119846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a869109d071214ccb93fc5eed17a0217, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookSensitivity: 2
 --- !u!81 &6875368188381745497
 AudioListener:
   m_ObjectHideFlags: 0
@@ -519,6 +507,56 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _camera: {fileID: 5429871963330155458}
   _audioListener: {fileID: 6875368188381745497}
+--- !u!114 &3688563001721012450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7889315627308119846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a869109d071214ccb93fc5eed17a0217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  lookSensitivity: 2
+--- !u!114 &3203739892898058822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7889315627308119846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &7912876603975086754
 GameObject:
   m_ObjectHideFlags: 0

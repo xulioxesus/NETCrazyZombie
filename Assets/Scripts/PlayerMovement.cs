@@ -30,8 +30,6 @@ public class PlayerMovement : NetworkBehaviour
         moveInput.y = Input.GetAxis("Vertical") * speed;    // desplazamiento frontal (eje Z)
         moveInput *= Time.deltaTime;                        // ajustar la velocidad al frame rate
 
-
-        transform.Translate(moveInput.x, 0, moveInput.y);   // aplicar el desplazamiento
         TranslateRpc(moveInput);
 
         // salto del jugador

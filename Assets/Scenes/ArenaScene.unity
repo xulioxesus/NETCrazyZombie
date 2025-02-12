@@ -3229,6 +3229,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 705653958}
+  - component: {fileID: 705653959}
   - component: {fileID: 705653957}
   m_Layer: 0
   m_Name: PowerUpSpawner
@@ -3249,6 +3250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abbe3cde21e6277f28af4329f24d3db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   prefab: {fileID: 610581957816584087, guid: 31d0dec83ad9157f6b1535177bc5cfe9, type: 3}
   spawnPoints:
   - {fileID: 1054504378}
@@ -3273,6 +3275,31 @@ Transform:
   - {fileID: 861995862}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &705653959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705653956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3705591014
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &732884920
 GameObject:
   m_ObjectHideFlags: 0
@@ -7006,6 +7033,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1720204234}
+  - component: {fileID: 1720204235}
   - component: {fileID: 1720204233}
   m_Layer: 0
   m_Name: ZombieSpawner
@@ -7013,7 +7041,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1720204233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7026,8 +7054,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcbc3fc021865737687cb73d29545467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   zombie: {fileID: 7732215342285772597, guid: 83919edcc327fa57ab57e27ff563abe7, type: 3}
-  spawnDelay: 3
+  spawnDelay: 1
   zombieMax: 10
 --- !u!4 &1720204234
 Transform:
@@ -7044,6 +7073,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1720204235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720204232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1318807959
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1760886207
 GameObject:
   m_ObjectHideFlags: 0

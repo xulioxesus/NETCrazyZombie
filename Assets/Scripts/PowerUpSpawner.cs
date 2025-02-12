@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PowerUpSpawner : MonoBehaviour
+public class PowerUpSpawner : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] GameObject prefab;
@@ -12,25 +13,19 @@ public class PowerUpSpawner : MonoBehaviour
 
     GameObject powerUp;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        StartCoroutine(Spawn());
+        InvokeRepeating(nameof(SpawnRpc), 2f, delay);
     }
 
-    IEnumerator Spawn()
+    [Rpc(SendTo.Server)]
+    private void SpawnRpc()
     {
-        while (true)
-        {
-            if (powerUp == null)
-            {
-                yield return new WaitForSeconds(delay);
-                
-                Vector3 position = spawnPoints[Random.Range(0, spawnPoints.Length)].position;
-                
-                powerUp = Instantiate(prefab, position, Quaternion.identity);
-            }
-
-            yield return new WaitForSeconds(0.5f);
+        if (IsServer && powerUp == null)
+        {   
+            Vector3 position = spawnPoints[Random.Range(0, spawnPoints.Length)].position;   
+            powerUp = Instantiate(prefab, position, Quaternion.identity);
+            powerUp.GetComponent<NetworkObject>().Spawn();
         }
     }
 }
