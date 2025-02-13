@@ -4,62 +4,45 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
-struct SyncableCustomData : INetworkSerializable
-{
-    public int Health;
-    public FixedString128Bytes Username; //value-type version of string with fixed allocation. Strings should be avoided in general when dealing with netcode. Fixed strings are a "less bad" option.
-
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-    {
-        serializer.SerializeValue(ref Health);
-        serializer.SerializeValue(ref Username);
-    }
-}
 
 public class CharacterManager : NetworkBehaviour
 {
-    const int MAX_LIFE = 100;
-
-    NetworkVariable<SyncableCustomData> m_SyncedCustomData = new NetworkVariable<SyncableCustomData>(default,
-        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public const int MAX_LIFE = 100;
+    private NetworkVariable<int> health;
+    public NetworkVariable<FixedString128Bytes> username;
 
     [SerializeField] Image m_HealthBarImage;
     [SerializeField] TMP_Text m_UsernameLabel;
 
+    private void Awake()
+    {
+        health = new NetworkVariable<int>(MAX_LIFE);
+        username = new NetworkVariable<FixedString128Bytes>("MultiplayerUseCasesUtilities.GetRandomUsername()"); 
+    }
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsClient)
-        {
-            m_SyncedCustomData.Value = new SyncableCustomData
-            {
-                Health = MAX_LIFE,
-                Username = MultiplayerUseCasesUtilities.GetRandomUsername()
-            };
-
-            OnClientCustomDataChanged(m_SyncedCustomData.Value, m_SyncedCustomData.Value);
-            m_SyncedCustomData.OnValueChanged += OnClientCustomDataChanged; //this will be called on the client whenever the value is changed by the server
-        }
+        health.OnValueChanged += OnClientHealthChanged;
+        username.OnValueChanged += OnClientUsernameChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        if (IsClient)
-        {
-            m_SyncedCustomData.OnValueChanged -= OnClientCustomDataChanged;
-        }
+        health.OnValueChanged -= OnClientHealthChanged;
+        username.OnValueChanged -= OnClientUsernameChanged;
     }
 
+    private void OnClientUsernameChanged(FixedString128Bytes previousValue, FixedString128Bytes newValue)
+    {
+        m_UsernameLabel.text = newValue.ToString();
+    }
 
     void ApplyDamage(int damage)
     {
-        if(IsOwner && m_SyncedCustomData.Value.Health > 0)
+        if(IsOwner && health.Value > 0)
         {
-            int old = m_SyncedCustomData.Value.Health;
-            int salud = old - damage;
-            ApplyDamageRpc(salud);
-            
+            ApplyDamageRpc(damage);   
         }        
     }
 
@@ -68,42 +51,18 @@ public class CharacterManager : NetworkBehaviour
     {
         if(!IsServer) return;
         
-        if (m_SyncedCustomData.Value.Health > 0)
+        if (health.Value > 0)
         {
-            int old = m_SyncedCustomData.Value.Health;
-            int salud = old - damage;
-            m_SyncedCustomData.Value = new SyncableCustomData
-            {
-                Health = salud,
-                Username = MultiplayerUseCasesUtilities.GetRandomUsername()
-            };
-            
+            health.Value -= damage;
         }        
     }
 
     void OnClientHealthChanged(int previousHealth, int newHealth)
     {
         m_HealthBarImage.rectTransform.localScale = new Vector3((float)newHealth / 100.0f, 1);//(float)newHealth / 100.0f;
-        OnClientUpdateHealthBarColor(newHealth);
-        //note: you could use the previousHealth to play a healing/damage animation
-    }
-
-    void OnClientUpdateHealthBarColor(int newHealth)
-    {
         const int k_MaxHealth = 100;
         float healthPercent = (float)newHealth / k_MaxHealth;
         Color healthBarColor = new Color(1 - healthPercent, healthPercent, 0);
         m_HealthBarImage.color = healthBarColor;
-    }
-
-    void OnClientUsernameChanged(string newUsername)
-    {
-        m_UsernameLabel.text = newUsername;
-    }
-
-    void OnClientCustomDataChanged(SyncableCustomData previousValue, SyncableCustomData newValue)
-    {
-        OnClientHealthChanged(previousValue.Health, newValue.Health);
-        OnClientUsernameChanged(newValue.Username.ToString());
     }
 }

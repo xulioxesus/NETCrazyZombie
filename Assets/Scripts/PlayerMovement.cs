@@ -33,7 +33,7 @@ public class PlayerMovement : NetworkBehaviour
         TranslateRpc(moveInput);
 
         // salto del jugador
-        if (IsGrounded() && Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
             JumpRpc();        
         }     
@@ -54,7 +54,8 @@ public class PlayerMovement : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void JumpRpc()
     {
-         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        if(IsGrounded())
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     bool IsGrounded()

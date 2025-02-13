@@ -5,6 +5,8 @@ public class ProyectileMovement : NetworkBehaviour
 {
     public float speed = 10.0f;
     public  float lifeTime = 5f;
+
+    public int PLAYER_DAMAGE = 10;
     
     private void Start()
     {
@@ -21,5 +23,16 @@ public class ProyectileMovement : NetworkBehaviour
     {
         GetComponent<NetworkObject>().Despawn(); // Despawner en la red
         Destroy(gameObject);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(IsServer){
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.gameObject.SendMessage("ApplyDamage", PLAYER_DAMAGE);
+                DestroyBullet();
+            }
+        }
     }
 }
