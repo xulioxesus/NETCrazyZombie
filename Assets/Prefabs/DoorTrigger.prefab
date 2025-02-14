@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 683332054235572235}
   - component: {fileID: 3342017906481751242}
   - component: {fileID: 1156965561521431862}
+  - component: {fileID: 4896491767248147478}
   m_Layer: 0
   m_Name: DoorTrigger
   m_TagString: Untagged
@@ -68,6 +69,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 8022168121562312540}
+--- !u!114 &4896491767248147478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7879304101104824213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 694564139
+    TransitionDuration: 0.25
+    TriggerNameHash: 71445658
+    TransitionIndex: 0
+  m_Animator: {fileID: 8022168121562312540}
 --- !u!1 &8665568633411404724
 GameObject:
   m_ObjectHideFlags: 0

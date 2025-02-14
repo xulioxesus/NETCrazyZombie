@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.AI;
-
-public class ZombieAnim : MonoBehaviour
+using Unity.Netcode;
+public class ZombieAnim : NetworkBehaviour
 {
     [SerializeField] Animator anim;
     NavMeshAgent agent;
 
-    void OnNetworkSpawn()
+    public override void OnNetworkSpawn()
     {
         anim.SetBool("IsRunning", true);
         agent = GetComponent<NavMeshAgent>();
