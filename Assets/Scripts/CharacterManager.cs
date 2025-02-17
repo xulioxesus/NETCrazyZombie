@@ -8,7 +8,9 @@ using Unity.Netcode;
 public class CharacterManager : NetworkBehaviour
 {
     public const int MAX_LIFE = 100;
-    private NetworkVariable<int> health;
+    public const int BULLET_DAMAGE = 10;
+     
+    public NetworkVariable<int> health;
     public NetworkVariable<FixedString128Bytes> username;
 
     [SerializeField] Image m_HealthBarImage;
@@ -64,5 +66,16 @@ public class CharacterManager : NetworkBehaviour
         float healthPercent = (float)newHealth / k_MaxHealth;
         Color healthBarColor = new Color(1 - healthPercent, healthPercent, 0);
         m_HealthBarImage.color = healthBarColor;
+    }
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(IsServer){
+            if (collision.gameObject.CompareTag("Bullet"))
+            {
+                ApplyDamage(BULLET_DAMAGE);
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@ public class MoveToPosition : NetworkBehaviour
     {
         if(IsServer){
             agent = GetComponent<NavMeshAgent>();
-            FindTarget();
+            Invoke("FindTarget",3);
         }
 
 
