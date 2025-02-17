@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class OwnerComponentManager : NetworkBehaviour
+public class CameraOwnerComponentManager : NetworkBehaviour
 {
     [SerializeField] private Camera _camera; // This is your camera, assign it in the prefab
     [SerializeField] private AudioListener _audioListener; // This is your listener, assign it in the prefab

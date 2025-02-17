@@ -16,7 +16,7 @@ public class ZombieAnim : NetworkBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            if (!agent.isStopped)
+            if (agent != null && !agent.isStopped)
             {
                 agent.SetDestination(transform.position);
                 agent.isStopped = true;

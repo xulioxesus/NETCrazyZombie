@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Unity.Netcode;
 
-public class Fireproyectile : NetworkBehaviour
+public class PlayerFireBullet : NetworkBehaviour
 {
     [SerializeField] GameObject proyectile;
         

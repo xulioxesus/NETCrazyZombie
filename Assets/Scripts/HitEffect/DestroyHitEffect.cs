@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DestroyEffect : MonoBehaviour
+public class DestroyHitEffect : MonoBehaviour
 {
     const float TIME = 1;
     float timer;

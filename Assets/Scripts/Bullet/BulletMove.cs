@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class ProyectileMovement : NetworkBehaviour
+public class BulletMove : NetworkBehaviour
 {
     public float speed = 10.0f;
     public  float lifeTime = 5f;

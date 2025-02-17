@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class EnemyDamage : NetworkBehaviour
+public class ZombieDamage : NetworkBehaviour
 {
     const int HITS_TO_DIE = 3;
     int hitCount;

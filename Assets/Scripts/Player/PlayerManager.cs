@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Unity.Netcode;
 
 
-public class CharacterManager : NetworkBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     public const int MAX_LIFE = 100;
     public const int BULLET_DAMAGE = 10;
@@ -19,13 +19,14 @@ public class CharacterManager : NetworkBehaviour
     private void Awake()
     {
         health = new NetworkVariable<int>(MAX_LIFE);
-        username = new NetworkVariable<FixedString128Bytes>("MultiplayerUseCasesUtilities.GetRandomUsername()"); 
+        username = new NetworkVariable<FixedString128Bytes>(Utilities.GetRandomUsername()); 
     }
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         health.OnValueChanged += OnClientHealthChanged;
         username.OnValueChanged += OnClientUsernameChanged;
+        ChangeNameRpc(Utilities.GetRandomUsername());
     }
 
     public override void OnNetworkDespawn()
@@ -46,6 +47,13 @@ public class CharacterManager : NetworkBehaviour
         {
             ApplyDamageRpc(damage);   
         }        
+    }
+
+    [Rpc(SendTo.Server)]
+    void ChangeNameRpc(FixedString128Bytes newValue)
+    {
+        if(!IsServer) return;
+        username.Value = newValue;        
     }
 
     [Rpc(SendTo.Server)]

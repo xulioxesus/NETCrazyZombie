@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Unity.Netcode;
 
-public class MouseLook : NetworkBehaviour
+public class CameraMouseLook : NetworkBehaviour
 {
     const float CLAMP_MIN = -45.0f;
     const float CLAMP_MAX = 45.0f;

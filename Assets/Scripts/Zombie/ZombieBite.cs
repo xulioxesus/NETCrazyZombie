@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class EnemyBite : NetworkBehaviour
+public class ZombieBite : NetworkBehaviour
 {
     
     void OnCollisionStay(Collision other)

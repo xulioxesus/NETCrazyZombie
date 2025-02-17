@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using Unity.Netcode;
 using Unity.Services.Matchmaker.Models;
 
-public class MoveToPosition : NetworkBehaviour
+public class ZombieMove : NetworkBehaviour
 {
     Transform target;
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class OpenDoor : MonoBehaviour
+public class DoorOpen : MonoBehaviour
 {
     [SerializeField] Animator anim;
 
