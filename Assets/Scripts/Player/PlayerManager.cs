@@ -16,17 +16,22 @@ public class PlayerManager : NetworkBehaviour
     [SerializeField] Image m_HealthBarImage;
     [SerializeField] TMP_Text m_UsernameLabel;
 
+    private GameObject playerSpawner;
+
     private void Awake()
     {
         health = new NetworkVariable<int>(MAX_LIFE);
-        username = new NetworkVariable<FixedString128Bytes>(Utilities.GetRandomUsername()); 
+        username = new NetworkVariable<FixedString128Bytes>(Utilities.GetRandomUsername());
+        playerSpawner = GameObject.Find("PlayerSpawner");
     }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         health.OnValueChanged += OnClientHealthChanged;
         username.OnValueChanged += OnClientUsernameChanged;
         ChangeNameRpc(Utilities.GetRandomUsername());
+        gameObject.transform.position = playerSpawner.GetComponent<SpawnPointManager>().GetRandomSpawnPoint();
     }
 
     public override void OnNetworkDespawn()
@@ -50,21 +55,25 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void ChangeNameRpc(FixedString128Bytes newValue)
+    public void ChangeNameRpc(FixedString128Bytes newValue)
     {
         if(!IsServer) return;
         username.Value = newValue;        
     }
 
     [Rpc(SendTo.Server)]
-    void ApplyDamageRpc(int damage)
+    public void ApplyDamageRpc(int damage)
     {
         if(!IsServer) return;
         
         if (health.Value > 0)
         {
             health.Value -= damage;
-        }        
+        }
+        if (health.Value <= 0)
+        {
+            Die();
+        }
     }
 
     void OnClientHealthChanged(int previousHealth, int newHealth)
@@ -85,5 +94,29 @@ public class PlayerManager : NetworkBehaviour
                 ApplyDamage(BULLET_DAMAGE);
             }
         }
+    }
+
+    private void Die()
+    {
+        if (!IsServer) return;
+
+        NetworkObject networkObject = GetComponent<NetworkObject>();
+
+        if (networkObject != null)
+        {
+            networkObject.Despawn(true); // Despawn and destroy on all clients
+        }
+
+        Invoke("Respawn",3);
+    }
+
+    private void Respawn()
+    {
+        if(!IsServer) return;
+
+        NetworkObject networkObject = GetComponent<NetworkObject>();
+        gameObject.transform.position = playerSpawner.GetComponent<SpawnPointManager>().GetRandomSpawnPoint();
+        health.Value = MAX_LIFE;
+        networkObject.Spawn(); // Reaparece el jugador
     }
 }

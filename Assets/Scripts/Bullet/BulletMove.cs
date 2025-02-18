@@ -11,7 +11,7 @@ public class BulletMove : NetworkBehaviour
     private void Start()
     {
         if (IsServer) // Solo el servidor controla la destrucción
-            Invoke(nameof(DestroyBullet), lifeTime);
+            Invoke(nameof(DestroyBulletRpc), lifeTime);
     }
 
     private void Update()
@@ -19,10 +19,13 @@ public class BulletMove : NetworkBehaviour
         transform.position += transform.forward * speed * Time.deltaTime;
     }
 
-    private void DestroyBullet()
+    [Rpc(SendTo.Server)]
+    private void DestroyBulletRpc()
     {
-        GetComponent<NetworkObject>().Despawn(); // Despawner en la red
-        Destroy(gameObject);
+        if(IsServer){
+            GetComponent<NetworkObject>().Despawn(); // Despawner en la red
+            Destroy(gameObject);
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -31,7 +34,7 @@ public class BulletMove : NetworkBehaviour
             if (collision.gameObject.CompareTag("Player"))
             {
                 collision.gameObject.SendMessage("ApplyDamage", PLAYER_DAMAGE);
-                DestroyBullet();
+                DestroyBulletRpc();
             }
         }
     }

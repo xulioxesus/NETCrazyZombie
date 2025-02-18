@@ -6,19 +6,28 @@ public class ZombieDamage : NetworkBehaviour
     const int HITS_TO_DIE = 3;
     int hitCount;
 
-    void OnCollisionEnter(Collision collision)
+    private GameObject zombieManager;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        zombieManager = GameObject.Find("ZombieSpawner");
+    }
+
+    void OnCollisionEnter(Collision other)
     {
         if(IsServer){
-            if (collision.gameObject.CompareTag("Bullet"))
+            if (other.gameObject.CompareTag("Bullet"))
             {
                 hitCount++;
 
                 if (hitCount == HITS_TO_DIE)
                 {
-                    GetComponent<NetworkObject>().Despawn();
-                    Destroy(gameObject);
+                    zombieManager.GetComponent<ZombieSpawner>().DestroyZombieRpc(gameObject.GetComponent<NetworkObject>());
                 }
             }
         }
     }
+
+
 }

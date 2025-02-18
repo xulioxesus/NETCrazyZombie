@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class ZombieSpawner : NetworkBehaviour
 {
@@ -19,13 +20,22 @@ public class ZombieSpawner : NetworkBehaviour
             InvokeRepeating(nameof(SpawnZombieRpc), 2f, spawnDelay);
         }
     }
-    
+
+    [Rpc(SendTo.Server)]
+    public void DestroyZombieRpc(NetworkObjectReference networkObjectReference)
+    {
+        NetworkObject target = networkObjectReference;
+        target.Despawn();
+        Destroy(target.gameObject);
+        numZombies--;
+    }
+
     [Rpc(SendTo.Server)]
     private void SpawnZombieRpc()
     {
         if (!IsServer) return;
         
-        while (numZombies < zombieMax)
+        if (numZombies < zombieMax)
         {
             GameObject enemy = Instantiate(zombie, transform.position, Quaternion.identity);
             enemy.GetComponent<NetworkObject>().Spawn();
