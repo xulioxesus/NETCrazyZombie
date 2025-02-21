@@ -17,12 +17,14 @@ public class PlayerManager : NetworkBehaviour
     [SerializeField] TMP_Text m_UsernameLabel;
 
     private GameObject playerSpawner;
+    private TextMeshProUGUI txtHealth;
 
     private void Awake()
     {
         health = new NetworkVariable<int>(MAX_LIFE);
         username = new NetworkVariable<FixedString128Bytes>(Utilities.GetRandomUsername());
         playerSpawner = GameObject.Find("PlayerSpawner");
+        txtHealth = GameObject.Find("txtHealth").GetComponent<TMPro.TextMeshProUGUI>();
     }
 
     public override void OnNetworkSpawn()
@@ -83,6 +85,7 @@ public class PlayerManager : NetworkBehaviour
         float healthPercent = (float)newHealth / k_MaxHealth;
         Color healthBarColor = new Color(1 - healthPercent, healthPercent, 0);
         m_HealthBarImage.color = healthBarColor;
+        txtHealth.text = newHealth.ToString();
     }
 
 
