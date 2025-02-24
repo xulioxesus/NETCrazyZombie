@@ -15,13 +15,13 @@ public class ZombieMove : NetworkBehaviour
             agent = GetComponent<NavMeshAgent>();
             Invoke("FindTarget",3);
         }
-
-
     }
     
     void Update()
     {
         if (!IsServer) return; // Solo el servidor controla el movimiento del enemigo
+
+        FindTarget();
 
         if (!agent.isStopped && target != null)
         {
@@ -31,10 +31,38 @@ public class ZombieMove : NetworkBehaviour
 
     private void FindTarget()
     {
+        target = GetNearestPlayer();
+    }
+
+    private Transform GetNearestPlayer()
+    {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        if (players.Length > 0)
+        Transform nearestPlayer = null;
+        float minDistance = Mathf.Infinity;
+
+        foreach (GameObject player in players)
         {
-            target = players[Random.Range(0, players.Length)].transform;
+            if(CanReachTarget(player.transform.position)){
+                float distance = Vector3.Distance(transform.position, player.transform.position);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    nearestPlayer = player.transform;
+                }
+            } 
         }
+
+        return nearestPlayer;
+    }
+
+    bool CanReachTarget(Vector3 targetPosition)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if (agent.CalculatePath(targetPosition, path))
+        {
+            Debug.Log("path.status: " + path.status);
+            return path.status == NavMeshPathStatus.PathComplete; // Only returns true if path is fully reachable
+        }
+        return false;
     }
 }

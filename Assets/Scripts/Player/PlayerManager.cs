@@ -11,29 +11,34 @@ public class PlayerManager : NetworkBehaviour
     public const int BULLET_DAMAGE = 10;
      
     public NetworkVariable<int> health;
+
+    public NetworkVariable<int> spawns;
     public NetworkVariable<FixedString128Bytes> username;
 
     [SerializeField] Image m_HealthBarImage;
     [SerializeField] TMP_Text m_UsernameLabel;
 
     private GameObject playerSpawner;
-    private TextMeshProUGUI txtHealth;
+    public TextMeshProUGUI txtHealth;
+
+    public TextMeshProUGUI txtSpawns;
 
     private void Awake()
     {
         health = new NetworkVariable<int>(MAX_LIFE);
         username = new NetworkVariable<FixedString128Bytes>(Utilities.GetRandomUsername());
         playerSpawner = GameObject.Find("PlayerSpawner");
-        txtHealth = GameObject.Find("txtHealth").GetComponent<TMPro.TextMeshProUGUI>();
     }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         health.OnValueChanged += OnClientHealthChanged;
+        spawns.OnValueChanged += OnSpawnsChanged;
         username.OnValueChanged += OnClientUsernameChanged;
         ChangeNameRpc(Utilities.GetRandomUsername());
         gameObject.transform.position = playerSpawner.GetComponent<SpawnPointManager>().GetRandomSpawnPoint();
+        OnClientHealthChanged(MAX_LIFE, MAX_LIFE);
     }
 
     public override void OnNetworkDespawn()
@@ -41,6 +46,7 @@ public class PlayerManager : NetworkBehaviour
         base.OnNetworkDespawn();
         health.OnValueChanged -= OnClientHealthChanged;
         username.OnValueChanged -= OnClientUsernameChanged;
+        ApplyDamage(0);
     }
 
     private void OnClientUsernameChanged(FixedString128Bytes previousValue, FixedString128Bytes newValue)
@@ -78,6 +84,14 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
+    [Rpc(SendTo.Server)]
+    public void ApplySpawnRpc()
+    {
+        if(!IsServer) return;
+        
+        spawns.Value++;
+    }
+
     void OnClientHealthChanged(int previousHealth, int newHealth)
     {
         m_HealthBarImage.rectTransform.localScale = new Vector3((float)newHealth / 100.0f, 1);//(float)newHealth / 100.0f;
@@ -86,6 +100,11 @@ public class PlayerManager : NetworkBehaviour
         Color healthBarColor = new Color(1 - healthPercent, healthPercent, 0);
         m_HealthBarImage.color = healthBarColor;
         txtHealth.text = newHealth.ToString();
+    }
+
+    void OnSpawnsChanged(int previousValue, int newValue)
+    {
+       txtSpawns.text = newValue.ToString();
     }
 
 
@@ -103,23 +122,25 @@ public class PlayerManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        NetworkObject networkObject = GetComponent<NetworkObject>();
+        /* NetworkObject networkObject = GetComponent<NetworkObject>();
 
         if (networkObject != null)
         {
             networkObject.Despawn(true); // Despawn and destroy on all clients
         }
 
-        Invoke("Respawn",3);
+        Invoke("Respawn",3); */
+        Respawn();
     }
 
     private void Respawn()
     {
         if(!IsServer) return;
 
-        NetworkObject networkObject = GetComponent<NetworkObject>();
+        //NetworkObject networkObject = GetComponent<NetworkObject>();
         gameObject.transform.position = playerSpawner.GetComponent<SpawnPointManager>().GetRandomSpawnPoint();
         health.Value = MAX_LIFE;
-        networkObject.Spawn(); // Reaparece el jugador
+        spawns.Value++;
+        //networkObject.Spawn(); // Reaparece el jugador
     }
 }
