@@ -9,7 +9,7 @@
 
 - Separar el sistema de salud del jugador de forma similar a NETTanks.
 
-- Separar el sistema del display de saludo de forma similar a NETTanks.
+- Separar el sistema del display de salud de forma similar a NETTanks.
 
 - Implementar un sistema de respawn que funcione correctamente.
 
